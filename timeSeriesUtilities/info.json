@@ -1,0 +1,221 @@
+{
+    "name": "timeSeriesUtilities",
+    "version": "1.0.0",
+    "label": "Time Series Chart Utilities",
+    "description": "This connector provides utility functions for use with the Time Series Chart Widget",
+    "publisher": "Fortinet",
+    "icon_small_name": {
+        "name": {
+            "name": {
+                "name": {
+                    "name": {
+                        "name": "",
+                        "content": ""
+                    },
+                    "content": ""
+                },
+                "content": ""
+            },
+            "content": ""
+        },
+        "content": ""
+    },
+    "icon_large_name": {
+        "name": {
+            "name": {
+                "name": {
+                    "name": {
+                        "name": "",
+                        "content": ""
+                    },
+                    "content": ""
+                },
+                "content": ""
+            },
+            "content": ""
+        },
+        "content": ""
+    },
+    "category": "",
+    "configuration": {},
+    "operations": [
+        {
+            "title": "Assemble Query Time Windows",
+            "operation": "assemble_query_time_windows",
+            "description": "Takes relative date, time period, date formatting data, plus optionally a list of existing datetimes and builds a list of time buckets from them spanning the time window specified by the relative date information.",
+            "parameters": [
+                {
+                    "title": "Relative Date",
+                    "type": "object",
+                    "name": "relativeDate",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": null,
+                    "tooltip": "JSON in the format {\"differenceType\": ..., \"differenceValue\": ...}"
+                },
+                {
+                    "title": "Period",
+                    "type": "select",
+                    "name": "period",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": null,
+                    "options": [
+                        "Hourly",
+                        "Daily",
+                        "Weekly",
+                        "Monthly",
+                        "Quarterly",
+                        "Yearly"
+                    ]
+                },
+                {
+                    "title": "Date Format String",
+                    "type": "text",
+                    "name": "dateFormatString",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": "YYYY-MM-DDTHH:mm:ss.SSS[Z]",
+                    "tooltip": "How dates are expected to be formatted in the chart JSON"
+                },
+                {
+                    "title": "Existing Times",
+                    "type": "object",
+                    "name": "existingTimes",
+                    "required": false,
+                    "visible": true,
+                    "editable": true,
+                    "value": null,
+                    "tooltip": "The list of times currently shown in the chart, if the chart has previously been generated"
+                },
+                {
+                    "title": "Query Modified",
+                    "type": "checkbox",
+                    "name": "queryModified",
+                    "required": false,
+                    "visible": true,
+                    "editable": true,
+                    "value": false,
+                    "tooltip": "Whether the chart definition has been modified since the last time data was fetched. If so, all time windows will be re-queried and existing data overwritten."
+                }
+            ],
+            "open": false,
+            "category": "utilities"
+        },
+        {
+            "title": "Flatten Data Sets and Groups",
+            "operation": "flatten_data_sets_and_groups",
+            "description": "For use with the \"Wizard\" mode of configuring the Advanced Chart widget. Takes Data Set and Data Set Group information and outputs the flattened list of data sets to query, a list of Data Sets which should be grouped together, and a dictionary of Data Sets with specified plot types.",
+            "parameters": [
+                {
+                    "title": "Data Sets",
+                    "type": "object",
+                    "name": "dataSets",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": null
+                }
+            ],
+            "open": false,
+            "category": "utilities"
+        },
+        {
+            "title": "Format Data Set Output with Field-Grouped",
+            "operation": "format_data_set_output_with_fieldgrouped",
+            "description": "For use with the \"Wizard\" configuration option of the Advanced Charting widget. Takes the query output for a Data Set which the user specified to be grouped on a field value and formats this output to be consistent with how the widget will render the chart.",
+            "parameters": [
+                {
+                    "title": "Query Output",
+                    "type": "object",
+                    "name": "queryOutput",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": null
+                },
+                {
+                    "title": "Time Buckets Queried",
+                    "type": "object",
+                    "name": "timeBucketsQueried",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": null
+                },
+                {
+                    "title": "Data Set Configuration",
+                    "type": "object",
+                    "name": "dataSetConfiguration",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": null
+                }
+            ],
+            "open": false,
+            "category": "utilities"
+        },
+        {
+            "title": "Combine Query Results into Data Columns",
+            "operation": "combine_query_results_into_data_columns",
+            "description": "Takes the processed output of all data set queries, plus existing chart data and the results of the \"Assemble Query Time Windows\" operation and puts together the final data columns to be rendered in the chart.",
+            "parameters": [
+                {
+                    "title": "Playbook Mode",
+                    "type": "text",
+                    "name": "playbookMode",
+                    "required": false,
+                    "visible": true,
+                    "editable": true,
+                    "value": null,
+                    "tooltip": "Either \"new_chart\" or \"update_buckets\", based on the output of \"Assemble Query Time Windows\""
+                },
+                {
+                    "title": "First Index to Keep",
+                    "type": "integer",
+                    "name": "firstIndexToKeep",
+                    "required": false,
+                    "visible": true,
+                    "editable": true,
+                    "value": null,
+                    "tooltip": "When updating an existing table, this is the index of each existing data column which will be keps as the first index of the new column. Data prior to this index will be discarded."
+                },
+                {
+                    "title": "Queried Time Buckets",
+                    "type": "object",
+                    "name": "queriedTimeBuckets",
+                    "required": false,
+                    "visible": true,
+                    "editable": true,
+                    "value": null,
+                    "tooltip": "The 'query_buckets' attribute of the \"Assemble Query Time Windows\" operation"
+                },
+                {
+                    "title": "Query Results",
+                    "type": "object",
+                    "name": "queryResults",
+                    "required": true,
+                    "visible": true,
+                    "editable": true,
+                    "value": null
+                },
+                {
+                    "title": "Existing Data Columns",
+                    "type": "object",
+                    "name": "existingDataColumns",
+                    "required": false,
+                    "visible": true,
+                    "editable": true,
+                    "value": null
+                }
+            ],
+            "open": true,
+            "category": "utilities"
+        }
+    ],
+    "forked_from": false
+}
