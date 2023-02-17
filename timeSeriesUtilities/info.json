@@ -108,7 +108,7 @@
         {
             "title": "Flatten Data Sets and Groups",
             "operation": "flatten_data_sets_and_groups",
-            "description": "For use with the \"Wizard\" mode of configuring the Advanced Chart widget. Takes Data Set and Data Set Group information and outputs the flattened list of data sets to query, a list of Data Sets which should be grouped together, and a dictionary of Data Sets with specified plot types.",
+            "description": "Takes Data Set and Data Set Group information and outputs the flattened list of data sets to query, a list of Data Sets which should be grouped together, and a dictionary of Data Sets with specified plot types.",
             "parameters": [
                 {
                     "title": "Data Sets",
@@ -126,7 +126,7 @@
         {
             "title": "Format Data Set Output with Field-Grouped",
             "operation": "format_data_set_output_with_fieldgrouped",
-            "description": "For use with the \"Wizard\" configuration option of the Advanced Charting widget. Takes the query output for a Data Set which the user specified to be grouped on a field value and formats this output to be consistent with how the widget will render the chart.",
+            "description": "Takes the query output for a Data Set which the user specified to be grouped on a field value and formats this output to be consistent with how the widget will render the chart.",
             "parameters": [
                 {
                     "title": "Query Output",
