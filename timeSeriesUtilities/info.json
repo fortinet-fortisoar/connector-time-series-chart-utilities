@@ -79,12 +79,13 @@
         {
             "title": "Flatten Data Sets and Groups",
             "operation": "flatten_data_sets_and_groups",
-            "description": "Takes Data Set and Data Set Group information and outputs the flattened list of data sets to query, a list of Data Sets which should be grouped together, and a dictionary of Data Sets with specified plot types.",
+            "description": "Takes Data Set and Data Set Group information and outputs the flattened list of data sets to query, a list of Data Sets which should be grouped together, and a dictionary of Data Sets with specified plot types. This data set information will come from configuring the Time Series Charts widget.",
             "parameters": [
                 {
                     "title": "Data Sets",
                     "type": "object",
                     "name": "dataSets",
+                    "tooltip": "This is the JSON-formatted data from the TimeSeries Chart widget configuration. Each Data Set will have its own query and list of filters, potentially with the results grouped based on a picklist field.",
                     "required": true,
                     "visible": true,
                     "editable": true,
