@@ -4,38 +4,8 @@
     "label": "Time Series Chart Utilities",
     "description": "When using the Time Series Chart Solution Pack, this connector is used by the included playbooks to facilitate the creation of data-over-time or time series charts. The included functions include building a list of datetime-buckets, as well as various utilities to process the output of dataset queries for use by the Time Series Widget. ",
     "publisher": "Fortinet",
-    "icon_small_name": {
-        "name": {
-            "name": {
-                "name": {
-                    "name": {
-                        "name": "",
-                        "content": ""
-                    },
-                    "content": ""
-                },
-                "content": ""
-            },
-            "content": ""
-        },
-        "content": ""
-    },
-    "icon_large_name": {
-        "name": {
-            "name": {
-                "name": {
-                    "name": {
-                        "name": "",
-                        "content": ""
-                    },
-                    "content": ""
-                },
-                "content": ""
-            },
-            "content": ""
-        },
-        "content": ""
-    },
+    "icon_small_name": "",
+    "icon_large_name": "",
     "category": "",
     "configuration": {},
     "operations": [
