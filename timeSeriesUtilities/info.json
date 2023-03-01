@@ -12,7 +12,7 @@
         {
             "title": "Assemble Query Time Windows",
             "operation": "assemble_query_time_windows",
-            "description": "Takes relative date, time period, date formatting data, plus optionally a list of existing datetimes and builds a list of time buckets from them spanning the time window specified by the relative date information.",
+            "description": "Takes relative date (last x days, for example), time period (hourly, daily, etc), date format string, plus optionally a list of existing datetimes and builds a list of time buckets from them spanning the time window specified by the relative date information.",
             "parameters": [
                 {
                     "title": "Relative Date",
@@ -22,12 +22,13 @@
                     "visible": true,
                     "editable": true,
                     "value": null,
-                    "tooltip": "JSON in the format {\"differenceType\": ..., \"differenceValue\": ...}"
+                    "tooltip": "JSON in the format {\"differenceType\": \"days\", \"differenceValue\": \"-7\"}"
                 },
                 {
-                    "title": "Period",
+                    "title": "Time Period",
                     "type": "select",
-                    "name": "period",
+                    "name": "time_period",
+                    "tooltip": "The time interval which you want to use as the time bucket duration on your chart.",
                     "required": true,
                     "visible": true,
                     "editable": true,
@@ -54,7 +55,7 @@
                 {
                     "title": "Existing Times",
                     "type": "object",
-                    "name": "existingTimes",
+                    "name": "existing_times",
                     "required": false,
                     "visible": true,
                     "editable": true,
@@ -64,7 +65,7 @@
                 {
                     "title": "Query Modified",
                     "type": "checkbox",
-                    "name": "queryModified",
+                    "name": "query_modified",
                     "required": false,
                     "visible": true,
                     "editable": true,

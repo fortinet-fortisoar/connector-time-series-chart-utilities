@@ -12,10 +12,10 @@ def assemble_query_time_windows(config, params):
     #  For example, if you passed in a list of 1:00, 2:00, 3:00 with time period hourly, then even if this executed at 4:15,
     #  the next item added to the list would be 4:00, because it would be one hour after the last time in the passed-in list.
     relative_date = params.get('relativeDate')
-    period = params.get('period')
+    period = params.get('time_period')
     date_format = params.get('dateFormat', 'YYYY-MM-DDTHH:mm:ss.SSS[Z]')
-    existing_times = params.get('times', [])
-    query_modified = params.get('queryModified', False)
+    existing_times = params.get('existing_times', [])
+    query_modified = params.get('query_modified', False)
 
     start_time, end_time = handleRelativeDate(relative_date, period)
 
