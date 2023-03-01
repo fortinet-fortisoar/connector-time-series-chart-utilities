@@ -4,6 +4,11 @@ logger = get_logger(LOGGER_NAME)
 
 
 def format_data_set_output_with_fieldgrouped(config, params):
+    # This operation takes in the results of a dataset's queries, the
+    #  time buckets to which those results correspond,  and the dataset
+    #  information they pertain to and put it into a format the playbook
+    #  can easily parse. Particularly, this handles a case where the
+    #  dataset is grouped based on the value of a picklist field.
     result_dict = {}
     query_results = params.get('queryOutput')
     time_buckets = params.get('timeBucketsQueried')
