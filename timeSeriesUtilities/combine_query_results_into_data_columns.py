@@ -4,6 +4,13 @@ logger = get_logger(LOGGER_NAME)
 
 
 def combine_query_results_into_data_columns(config, params):
+    # This function takes in any existing chart data (input_columns), the
+    #  first index numerically to keep in the data (based on the time window
+    #  of the chart), the new time buckets to add to the chart, and the results
+    #  of the chart queries for those new time buckets, and puts it all together
+    #  so that the output is the data columns for all data sets, including
+    #  both data that was already in the chart (but is recent enough to not
+    #  be left off) and the newly queried data
     dataCols = []
     playbook_mode = params.get('playbookMode')
     first_index = params.get('firstIndexToKeep')
