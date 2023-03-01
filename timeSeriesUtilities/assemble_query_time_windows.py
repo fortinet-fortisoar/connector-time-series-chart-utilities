@@ -17,21 +17,29 @@ def assemble_query_time_windows(config, params):
     existing_times = params.get('existing_times', [])
     query_modified = params.get('query_modified', False)
 
-    start_time, end_time = handleRelativeDate(relative_date, period)
+    start_time, end_time = _handleRelativeDate(relative_date, period)
 
     if existing_times and not query_modified:
         # Find the index of the first time in the exiting time stamps which is >= to the calculated start time
         first_bucket_index = 0
         column_heading_present = False
         try:
+            # Check the first element of the existing times list
             arrow.get(existing_times[first_bucket_index])
         except arrow.parser.ParserError:
+            # If the first element of that list is not a datetime, then
+            #  it is probably a string, since the c3  column format allows
+            #  for the dataset header to appear as the first element in the list
+            #  In this case, move to the second element and try again
             first_bucket_index = 1
             column_heading_present = True
         try:
             while arrow.get(existing_times[first_bucket_index]) < start_time:
                 first_bucket_index += 1
         except arrow.parser.ParserError as e:
+            # If this parserError hits it means that neither the first nor
+            #  second element in the existing data list was arrow parsable. 
+            #  In this case raise an error.
             logger.error("Arrow library could not parse the object {}".format(existing_times[first_bucket_index]))
             raise ConnectorError("Arrow library could not parse the object {}".format(existing_times[first_bucket_index]))
         
@@ -46,10 +54,10 @@ def assemble_query_time_windows(config, params):
         time_buckets_to_query = [{'start': last_timebucket}]
         last_timebucket = arrow.get(last_timebucket)
         if last_timebucket < end_time:
-            time_buckets_to_query[0]['end'] = shift_time(last_timebucket,  period).format(date_format)
+            time_buckets_to_query[0]['end'] = _shift_time(last_timebucket,  period).format(date_format)
         while arrow.get(time_buckets_to_query[-1]['end']) < end_time:
             new_bucket = {'start': time_buckets_to_query[-1]['end']}
-            new_endtime = shift_time(arrow.get(time_buckets_to_query[-1]['end']), period)
+            new_endtime = _shift_time(arrow.get(time_buckets_to_query[-1]['end']), period)
             new_bucket['end'] = new_endtime.format(date_format) if new_endtime < end_time else end_time.format(date_format)
             time_buckets_to_query.append(new_bucket)
         return {"query_buckets": time_buckets_to_query, "mode": "update_buckets", "first_index_to_keep": first_record_to_keep_index}
@@ -61,34 +69,34 @@ def assemble_query_time_windows(config, params):
         time_slider = start_time
         while time_slider < end_time:
             new_bucket = {'start': time_slider.format(date_format)}
-            time_slider = shift_time(time_slider, period)
+            time_slider = _shift_time(time_slider, period)
             new_bucket['end'] = time_slider.format(date_format) if time_slider < end_time else end_time.format(date_format)
             time_buckets.append(new_bucket)
         return {'query_buckets': time_buckets, 'mode': 'new_chart', 'first_index_to_keep': None}
   
-def shift_time(t, period):
-    new_t = t
+def _shift_time(time_value, period):
+    new_t = time_value
     if period=="Hourly":
-        new_t = t.shift(hours=1)
+        new_t = time_value.shift(hours=1)
     elif period=="Daily":
-        new_t = t.shift(days=1)
+        new_t = time_value.shift(days=1)
     elif period == "Weekly":
-        new_t = t.shift(weeks=1)
+        new_t = time_value.shift(weeks=1)
     elif period == "Montly":
-        new_t = t.shift(months=1)
+        new_t = time_value.shift(months=1)
     elif period == "Quarterly":
-        new_t = t.shift(months=3)
+        new_t = time_value.shift(months=3)
     elif period == "Yearly":
-        new_t = t.shift(years=1)
+        new_t = time_value.shift(years=1)
     return new_t
 
-def handleRelativeDate(relDate, period):
-    pbStartTime = arrow.get().replace(second=0, microsecond=0)
+def _handleRelativeDate(relDate, period):
+    playbookStartTime = arrow.get().replace(second=0, microsecond=0)
     if "differenceType" in relDate:
         differenceValue = relDate['differenceValue']
         differenceType = relDate['differenceType']
-        startDate = pbStartTime
-        endDate = pbStartTime
+        startDate = playbookStartTime
+        endDate = playbookStartTime
         if differenceType == 'mins':
             differenceType = 'minutes'
         if differenceValue < 0:
