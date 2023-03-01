@@ -1,1 +1,1 @@
-LOGGER_NAME = 'timeseries'
+LOGGER_NAME = 'TimeSeriesChartUtilities'

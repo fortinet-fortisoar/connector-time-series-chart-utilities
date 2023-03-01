@@ -15,7 +15,7 @@ def combine_query_results_into_data_columns(config, params):
     playbook_mode = params.get('playbookMode')
     first_index = params.get('firstIndexToKeep')
     time_buckets = params.get('queriedTimeBuckets')
-    query_results = params.get('queryResults')
+    query_results = params.get('queryResults', [])
     input_columns = params.get('existingDataColumns')
 
     # First remove any "too old" elements from the timestamp column, and then
@@ -34,13 +34,18 @@ def combine_query_results_into_data_columns(config, params):
 
     # Run through the results of the new queries
     for qr in query_results:
-        #  if quantities[0] is a string, it means it is a non-field-grouped dataset
-        if isinstance(qr['quantities'][0], str):
-            handle_query_result_list(qr['quantities'], dataCols, len(x_col))
-        # Otherwise quantities[0] will be a list, for field-grouped dataSets
-        else:
-            for sub_qr in qr['quantities']:
-                handle_query_result_list(sub_qr, dataCols, len(x_col))
+        try:
+            #  if quantities[0] is a string, it means it is a non-field-grouped dataset
+            if isinstance(qr['quantities'][0], str):
+                handle_query_result_list(qr['quantities'], dataCols, len(x_col))
+            # Otherwise quantities[0] will be a list, for field-grouped dataSets
+            else:
+                for sub_qr in qr['quantities']:
+                    handle_query_result_list(sub_qr, dataCols, len(x_col))
+        except KeyError as e:
+            raise ConnectorError("Expected key 'quantities' not found in query result")
+        except IndexError as e:
+            raise ConnectorError("'Quantities'  attribute of query result is an empty list.")
     # Finally, run through all the data columns and add trailing zeros to any that need them
     for col in dataCols:
         if len(col) < len(x_col):
