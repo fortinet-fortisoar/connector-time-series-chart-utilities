@@ -1,5 +1,5 @@
 {
-    "name": "timeSeriesChartUtilities",
+    "name": "time-series-chart-utilities",
     "version": "1.0.0",
     "label": "Time Series Chart Utilities",
     "description": "When using the Time Series Chart Solution Pack, this connector is used by the included playbooks to facilitate the creation of data-over-time or time series charts. The included functions include building a list of datetime-buckets, as well as various utilities to process the output of dataset queries for use by the Time Series Widget. ",
@@ -21,8 +21,9 @@
                     "required": true,
                     "visible": true,
                     "editable": true,
-                    "value": null,
-                    "tooltip": "JSON in the format {\"differenceType\": \"days\", \"differenceValue\": \"-7\"}"
+                    "value": "{{vars.input.params['chart_record']['chartConfig']['relativeDate']}}",
+                    "tooltip": "JSON in the format {\"differenceType\": \"days\", \"differenceValue\": \"-7\"}",
+                    "description": "this is generally going to come directly from the Time Series Chart record for a specific chart."
                 },
                 {
                     "title": "Time Period",
@@ -32,7 +33,7 @@
                     "required": true,
                     "visible": true,
                     "editable": true,
-                    "value": null,
+                    "value": "{{vars.input.params['chart_record']['chartConfig']['timePeriod']}}",
                     "options": [
                         "Hourly",
                         "Daily",
@@ -59,7 +60,7 @@
                     "required": false,
                     "visible": true,
                     "editable": true,
-                    "value": null,
+                    "value": "{{vars.input.params['chart_record']['queryResults']['data']['columns'][0] or []}}",
                     "tooltip": "The list of times currently shown in the chart, if the chart has previously been generated"
                 },
                 {
@@ -69,7 +70,7 @@
                     "required": false,
                     "visible": true,
                     "editable": true,
-                    "value": false,
+                    "value": "{{vars.input.params['chart_record']['queryModified']}}",
                     "tooltip": "Whether the chart definition has been modified since the last time data was fetched. If so, all time windows will be re-queried and existing data overwritten."
                 }
             ],
@@ -89,7 +90,7 @@
                     "required": true,
                     "visible": true,
                     "editable": true,
-                    "value": null
+                    "value": "{{vars.input.params.chart_record.chartConfig.dataSets}}"
                 }
             ],
             "open": false,
@@ -104,28 +105,34 @@
                     "title": "Query Output",
                     "type": "object",
                     "name": "queryOutput",
+                    "description": "The output of a Query step, which runs a Data Set's query once for each time bucket which must be queried",
+                    "tooltip": "This should be a List of Lists, with one List per time bucket to be queried",
                     "required": true,
                     "visible": true,
                     "editable": true,
-                    "value": null
+                    "value": "{{vars.steps.Query_for_each_time_bucket}}"
                 },
                 {
                     "title": "Time Buckets Queried",
                     "type": "object",
                     "name": "timeBucketsQueried",
+                    "description": "A List of Dictionaries respresenting the start and end timestamps of each time bucket queried",
+                    "tooltip": "Should be in the format: {'end': '2023-03-12T23:00:00.000Z', 'start': '2023-03-12T22:00:00.000Z'}",
                     "required": true,
                     "visible": true,
                     "editable": true,
-                    "value": null
+                    "value": "{{vars.input.params.time_buckets}}"
                 },
                 {
                     "title": "Data Set Configuration",
                     "type": "object",
                     "name": "dataSetConfiguration",
+                    "description": "The configuration options selected for this Data Set when configuring the Time Series Chart Widget",
+                    "tooltip": "This will be a JSON object containing the Data Set's title, plot type, query information, and grouping information",
                     "required": true,
                     "visible": true,
                     "editable": true,
-                    "value": null
+                    "value": "{{vars.input.params.dataSet}}"
                 }
             ],
             "open": false,
@@ -140,10 +147,11 @@
                     "title": "Playbook Mode",
                     "type": "text",
                     "name": "playbookMode",
+                    "description": "This will dictate whether the output includes previous results, or whether they will be overwritten",
                     "required": false,
                     "visible": true,
                     "editable": true,
-                    "value": null,
+                    "value": "{{vars.steps.Assemble_Time_Windows_to_Query.data.mode}}",
                     "tooltip": "Either \"new_chart\" or \"update_buckets\", based on the output of \"Assemble Query Time Windows\""
                 },
                 {
@@ -153,8 +161,9 @@
                     "required": false,
                     "visible": true,
                     "editable": true,
-                    "value": null,
-                    "tooltip": "When updating an existing table, this is the index of each existing data column which will be keps as the first index of the new column. Data prior to this index will be discarded."
+                    "value": "{{vars.steps.Assemble_Time_Windows_to_Query.data.first_index_to_keep}}",
+                    "description": "Data prior to this index will be discarded",
+                    "tooltip": "When updating an existing table, this is the index of each existing data column which will be keps as the first index of the new column"
                 },
                 {
                     "title": "Queried Time Buckets",
@@ -163,8 +172,9 @@
                     "required": false,
                     "visible": true,
                     "editable": true,
-                    "value": null,
-                    "tooltip": "The 'query_buckets' attribute of the \"Assemble Query Time Windows\" operation"
+                    "value": "{{vars.steps.Assemble_Time_Windows_to_Query.data.query_buckets}}",
+                    "description": "A List of Dictionaries respresenting the start and end timestamps of each time bucket queried",
+                    "tooltip": "This should be the 'query_buckets' output of the \"Assemble Query Time Windows\" operation"
                 },
                 {
                     "title": "Query Results",
@@ -173,7 +183,9 @@
                     "required": true,
                     "visible": true,
                     "editable": true,
-                    "value": null
+                    "description": "The results of the queries run for all data sets. This should be the output of the \"Run Queries\" Playbook step",
+                    "tooltip": "This should be a List of Dictionaries, each containing an attribute called \"quantities\"",
+                    "value": "{{vars.steps.Run_Queries}}"
                 },
                 {
                     "title": "Existing Data Columns",
@@ -182,7 +194,9 @@
                     "required": false,
                     "visible": true,
                     "editable": true,
-                    "value": null
+                    "value": "{{vars.input.params.chart_record.queryResults.data.columns or []}}",
+                    "description": "When appending data to an existing chart, this should be the data already present in the chart",
+                    "tooltip": "When no such data is present, an empty List may be used instead"
                 }
             ],
             "open": true,
