@@ -29,7 +29,7 @@ def flatten_datasets(dataSets, group=False):
                     types[dataSet['title']] = plotType.lower()
             continue
         elif "dataSets" in dataSet:
-            subqueries, grouped_queries = flatten_datasets(dataSet['dataSets'], group=True)
+            subqueries, grouped_queries, subTypes = flatten_datasets(dataSet['dataSets'], group=True)
             queries = queries + subqueries
             groups.append(grouped_queries)
     return queries, groups, types
