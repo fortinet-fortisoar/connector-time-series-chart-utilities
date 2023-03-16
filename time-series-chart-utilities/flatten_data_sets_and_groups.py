@@ -16,19 +16,20 @@ def flatten_datasets(dataSets, group=False):
     types = {}
     for dataSet in dataSets:
         title = dataSet['title']
+        plotType = dataSet.get('plotType', None)
         if "query" in dataSet and len(dataSet["query"]) > 0:
             queries.append(dataSet)
             if group:
                 groups.append(title)
-            if dataSet['plotType'] and dataSet['plotType'] != 'Bar':
+            if plotType and plotType != 'Bar':
                 if 'groupingFieldOptions' in dataSet:
                     for option in dataSet['groupingFieldOptions']:
-                        types[dataSet['title'] + ' - ' + option] = dataSet['plotType'].lower()
+                        types[dataSet['title'] + ' - ' + option] = plotType.lower()
                 else:
-                    types[dataSet['title']] = dataSet['plotType'].lower()
+                    types[dataSet['title']] = plotType.lower()
             continue
         elif "dataSets" in dataSet:
-            subqueries, grouped_queries = flatten_datasets(dataSet['dataSets'], group=True)
+            subqueries, grouped_queries, subTypes = flatten_datasets(dataSet['dataSets'], group=True)
             queries = queries + subqueries
             groups.append(grouped_queries)
     return queries, groups, types
