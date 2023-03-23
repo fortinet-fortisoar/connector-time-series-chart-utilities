@@ -80,8 +80,19 @@
                     "description": "If this parameter is set to True, existing data from previous time windows will be discarded and the entire chart will be re-queried. Otherwise only time windows since the last time this Chart was updated will be queried"
                 }
             ],
+            "output_schema": {
+                "mode": "",
+                "query_buckets": [
+                  {
+                    "end": "",
+                    "start": ""
+                  }
+                ],
+                "first_index_to_keep": ""
+              },
             "open": false,
-            "category": "utilities"
+            "category": "utilities",
+            "annotation": "assemble_query_time_windows"
         },
         {
             "title": "Flatten Data Sets and Groups",
@@ -100,8 +111,37 @@
                     "value": "{{vars.input.params.chart_record.chartConfig.dataSets}}"
                 }
             ],
+            "output_schema": {
+                "types": {},
+                "groups": [],
+                "dataSets": [
+                  {
+                    "group": "",
+                    "query": {
+                      "sort": [],
+                      "limit": "",
+                      "logic": "",
+                      "filters": [],
+                      "aggregates": [
+                        {
+                          "alias": "",
+                          "field": "",
+                          "operator": ""
+                        }
+                      ]
+                    },
+                    "title": "",
+                    "isOpen": "",
+                    "plotType": "",
+                    "resource": "",
+                    "mappingField": "",
+                    "groupingField": ""
+                  }
+                ]
+              },
             "open": false,
-            "category": "utilities"
+            "category": "utilities",
+            "annotation": "flatten_data_sets_and_groups"
         },
         {
             "title": "Format Data Set Output with Field-Grouped",
@@ -142,8 +182,12 @@
                     "value": "{{vars.input.params.dataSet}}"
                 }
             ],
+            "output_schema": [
+                []
+              ],
             "open": false,
-            "category": "utilities"
+            "category": "utilities",
+            "annotation": "format_data_set_output_with_fieldgrouped"
         },
         {
             "title": "Combine Query Results into Data Columns",
@@ -206,7 +250,11 @@
                     "tooltip": "When no such data is present, an empty List may be used instead"
                 }
             ],
-            "category": "utilities"
+            "output_schema": [
+                []
+              ],
+            "category": "utilities",
+            "annotation": "combine_query_results_into_data_columns"
         }
     ]
 }
